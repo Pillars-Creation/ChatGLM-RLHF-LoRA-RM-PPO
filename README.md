@@ -337,3 +337,4 @@ model = load_model_on_gpus("THUDM/chatglm-6b", num_gpus=2)
   year={2022}
 }
 ```
+# ChatGLM-LoRA-
