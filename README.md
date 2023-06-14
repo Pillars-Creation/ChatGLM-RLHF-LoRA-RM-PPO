@@ -8,8 +8,10 @@
 
 3 lora实例部分做了个新闻短标题的生成
 
-##相关介绍链接
+#相关介绍链接
+
 https://blog.csdn.net/qjzcy/article/details/131206691?spm=1001.2014.3001.5502
+
 https://blog.csdn.net/qjzcy/article/details/131092884?spm=1001.2014.3001.5502
 
 ### 例子
