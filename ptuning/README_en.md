@@ -165,11 +165,11 @@ model = model.eval()
 response, history = model.chat(tokenizer, "Hello", history=[])
 ```
 
-**[23/04/19]** You can also directly run [web demo](./web_demo.py) which supports loading P-Tuning v2 checkpoint
+**[23/04/19]** You can also directly run [web demo](web_demo.py) which supports loading P-Tuning v2 checkpoint
 ```shell
 bash web_demo.sh
 ```
-It may be necessary to modify the content of [web_demo.sh](./web_demo.sh) to match your actual checkpoint situation.
+It may be necessary to modify the content of [web_demo.sh](web_demo.sh) to match your actual checkpoint situation.
 
 ## Use your own dataset
 Modify `train_file`, `validation_file` and `test_file` in `train.sh` and `evaluate.sh` to your own JSON format dataset paths, and change `prompt_column` and `response_column` to the keys in the JSON file corresponding to input text and output text.

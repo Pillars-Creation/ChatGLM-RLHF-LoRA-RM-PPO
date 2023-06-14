@@ -153,12 +153,21 @@ from transformers.utils import (
     logging,
 )
 from transformers.utils.generic import ContextManagers
+import torch.distributed as dist
+import os
 
+os.environ["RANK"] = "0"
+os.environ["WORLD_SIZE"] = "4"
+# os.environ["MASTER_ADDR"] = xxx.xxx.xxx.xxx  # 设置主节点的 IP 地址
 
 _is_native_cpu_amp_available = is_torch_greater_or_equal_than_1_10
 
 DEFAULT_CALLBACKS = [DefaultFlowCallback]
 DEFAULT_PROGRESS_CALLBACK = ProgressCallback
+
+
+dist.init_process_group(backend="nccl")
+
 
 if is_in_notebook():
     from transformers.utils.notebook import NotebookProgressCallback
@@ -1550,7 +1559,7 @@ class Trainer:
                 output_device=self.args.local_rank if self.args._n_gpu != 0 else None,
                 **kwargs,
             )
-
+            # model = nn.Module( model, **kwargs)
         return model
 
     def train(
