@@ -20,21 +20,12 @@
 ![img.png](img.png)
 
 
-#### 实验设置
 
 ## 使用方法
 
 
 ### 训练
 
-
-
-### 推理
-```
-max_source_length=64
-max_target_length=64
-max_steps=3000
-```
 
 ##### P-tuning v2
 
@@ -55,6 +46,14 @@ bash ds_train_finetune.sh
 python finetune_lora_chatglm.py
 ```
 
+
+
+### 推理
+```
+max_source_length=64
+max_target_length=64
+max_steps=3000
+```
 ## 模型部署
 首先载入Tokenizer：
 
