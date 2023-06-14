@@ -2,11 +2,15 @@
 
 #改动说明
 
-1,本仓库在ChatGLM-6B模型的基础上添加了lora微调。
+1 本仓库在ChatGLM-6B模型的基础上添加了lora微调。
 
-2,对部分核心代码进行逐行注释和讲解 
+2 对部分核心代码进行逐行注释和讲解 
 
-3,lora实例部分做了个新闻短标题的生成
+3 lora实例部分做了个新闻短标题的生成
+
+##相关介绍链接
+https://blog.csdn.net/qjzcy/article/details/131206691?spm=1001.2014.3001.5502
+https://blog.csdn.net/qjzcy/article/details/131092884?spm=1001.2014.3001.5502
 
 ### 例子
 #### 示例1
@@ -48,12 +52,6 @@ python finetune_lora_chatglm.py
 
 
 
-### 推理
-```
-max_source_length=64
-max_target_length=64
-max_steps=3000
-```
 ## 模型部署
 首先载入Tokenizer：
 
