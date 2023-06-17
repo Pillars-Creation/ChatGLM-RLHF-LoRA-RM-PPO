@@ -9,10 +9,12 @@
 3 添加lora训练部分做了个新闻短标题的生成  23.06.2
 
 4 对lora训练代码核心代码进行逐行注释和说明 23.06.10
+![img_1.png](img_1.png)
 
 5 添加lora预测代码 23.06.17
 
 #相关介绍链接
+
 main.py核心代码进行逐行注释和说明
 https://blog.csdn.net/qjzcy/article/details/131206691?spm=1001.2014.3001.5502
 
