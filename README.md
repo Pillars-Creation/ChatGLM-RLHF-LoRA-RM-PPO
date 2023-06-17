@@ -2,16 +2,21 @@
 
 #改动说明
 
-1 本仓库在ChatGLM-6B模型的基础上添加了lora微调。
+1 本仓库在ChatGLM-6B模型的基础上添加了lora微调。 23.04.26
 
-2 对部分核心代码进行逐行注释和讲解 
+2 对main.py核心代码进行逐行注释和说明 23.05.15
 
-3 lora实例部分做了个新闻短标题的生成
+3 添加lora训练部分做了个新闻短标题的生成  23.06.2
+
+4 对lora训练代码核心代码进行逐行注释和说明 23.06.10
+
+5 添加lora预测代码 23.06.17
 
 #相关介绍链接
-
+main.py核心代码进行逐行注释和说明
 https://blog.csdn.net/qjzcy/article/details/131206691?spm=1001.2014.3001.5502
 
+lora训练代码核心代码进行逐行注释和说明
 https://blog.csdn.net/qjzcy/article/details/131092884?spm=1001.2014.3001.5502
 
 ### 例子
@@ -29,6 +34,9 @@ https://blog.csdn.net/qjzcy/article/details/131092884?spm=1001.2014.3001.5502
 
 ## 使用方法
 
+进入 ptuning 目录
+
+cd ptuning
 
 ### 训练
 
