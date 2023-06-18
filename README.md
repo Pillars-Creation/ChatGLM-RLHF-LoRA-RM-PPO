@@ -1,5 +1,11 @@
 # ChatGLM-6B-lora
 
+### 例子
+#### 示例1
+![img_3.png](img_3.png)
+![img_2.png](img_2.png)
+![img_4.png](img_4.png)
+
 #改动说明
 
 1 本仓库在ChatGLM-6B模型的基础上添加了lora微调。 23.04.26
@@ -22,9 +28,6 @@ https://blog.csdn.net/qjzcy/article/details/131206691?spm=1001.2014.3001.5502
 lora训练代码核心代码进行逐行注释和说明
 https://blog.csdn.net/qjzcy/article/details/131092884?spm=1001.2014.3001.5502
 
-### 例子
-#### 示例1
-![img_3.png](img_3.png)
 
 ### 不同finetune方法生成参数模型大小对比结果
 ![img.png](img.png)
