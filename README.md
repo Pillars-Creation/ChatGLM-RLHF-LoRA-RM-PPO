@@ -59,6 +59,15 @@ bash ds_train_finetune.sh
 python finetune_lora_chatglm.py
 ```
 
+### 预测
+
+
+##### LoRA
+
+
+```
+python predict_lora_chatglm.py
+```
 
 
 ## 模型部署
