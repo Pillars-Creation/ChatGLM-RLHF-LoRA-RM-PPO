@@ -1,9 +1,10 @@
 # ChatGLM-6B-lora
 
-### 例子
 #### 示例1
 ![img_3.png](img_3.png)
+
 ![img_2.png](img_2.png)
+
 ![img_4.png](img_4.png)
 
 #改动说明
