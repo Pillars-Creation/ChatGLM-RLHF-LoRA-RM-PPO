@@ -1,13 +1,14 @@
 # ChatGLM-6B-lora
 
-#### 示例1
+## 示例1
 ![img_3.png](img_3.png)
 
 ![img_2.png](img_2.png)
 
 ![img_4.png](img_4.png)
 
-#改动说明
+
+##改动说明
 
 1 本仓库在ChatGLM-6B模型的基础上添加了lora微调。 23.04.26
 
@@ -122,8 +123,7 @@ bash web_demo.sh
 ```
 可能需要修改 [web_demo.sh](web_demo.sh) 的内容以符合你实际的 checkpoint 情况。
 
-## 使用自己的数据集
-修改 `train.sh` 和 `evaluate.sh` 中的 `train_file`、`validation_file`和`test_file`为你自己的 JSON 格式数据集路径，并将 `prompt_column` 和 `response_column` 改为 JSON 文件中输入文本和输出文本对应的 KEY。可能还需要增大 `max_source_length` 和 `max_target_length` 来匹配你自己的数据集中的最大输入输出长度。
+
 
 
 
