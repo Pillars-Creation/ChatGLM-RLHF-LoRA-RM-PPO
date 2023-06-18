@@ -8,7 +8,7 @@
 ![img_4.png](img_4.png)
 
 
-##改动说明
+## 改动说明
 
 1 本仓库在ChatGLM-6B模型的基础上添加了lora微调。 23.04.26
 
@@ -22,7 +22,7 @@
 5 添加lora预测代码 23.06.17
 
 
-##相关介绍链接
+## 相关介绍链接
 
 main.py核心代码进行逐行注释和说明
 https://blog.csdn.net/qjzcy/article/details/131206691?spm=1001.2014.3001.5502
