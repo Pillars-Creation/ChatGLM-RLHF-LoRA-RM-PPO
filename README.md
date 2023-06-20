@@ -17,7 +17,6 @@
 3 添加lora训练部分做了个新闻短标题的生成  23.06.2
 
 4 对lora训练文件finetune_lora_chatglm.py核心代码进行逐行注释和说明 23.06.10
-![img_1.png](img_1.png)
 
 5 添加lora预测代码 23.06.17
 
@@ -26,10 +25,11 @@
 
 main.py核心代码进行逐行注释和说明
 https://blog.csdn.net/qjzcy/article/details/131206691?spm=1001.2014.3001.5502
+![img_5.png](img_5.png)
 
 lora训练代码核心代码进行逐行注释和说明
 https://blog.csdn.net/qjzcy/article/details/131092884?spm=1001.2014.3001.5502
-
+![img_1.png](img_1.png)
 
 ### 不同finetune方法生成参数模型大小对比结果
 ![img.png](img.png)
