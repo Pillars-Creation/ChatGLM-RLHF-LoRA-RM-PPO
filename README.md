@@ -20,6 +20,10 @@
 
 5 添加lora预测代码 23.06.17
 
+6 添加rm预测模块 23.07.17
+
+7 添加rm预测代码 23.07.25
+
 
 ## 相关介绍链接
 
@@ -61,7 +65,13 @@ bash ds_train_finetune.sh
 
 
 ```
-python finetune_lora_chatglm.py
+python finetune_lora_sft.py
+```
+##### RM
+
+
+```
+python finetune_lora_rm.py
 ```
 
 ### 预测
@@ -71,9 +81,14 @@ python finetune_lora_chatglm.py
 
 
 ```
-python predict_lora_chatglm.py
+python predict_lora_sft.py
 ```
+##### RM
 
+
+```
+python predict_lora_rm.py
+```
 
 ## 模型部署
 首先载入Tokenizer：
