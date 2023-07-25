@@ -123,6 +123,11 @@ bash web_demo.sh
 ```
 可能需要修改 [web_demo.sh](web_demo.sh) 的内容以符合你实际的 checkpoint 情况。
 
+##Contact
+If you find our work useful, please do not save your star!
+
+If you have any questions, please email 136037396@qq.com
+
 
 
 
