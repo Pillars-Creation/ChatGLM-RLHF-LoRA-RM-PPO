@@ -1,4 +1,4 @@
-# ChatGLM-6B-lora
+# ChatGLM-6B-RLHF
 
 ## 示例1
 ![img_3.png](img_3.png)

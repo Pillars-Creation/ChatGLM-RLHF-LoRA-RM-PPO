@@ -71,14 +71,14 @@ def _mp_fn(index):
     # For xla_spawn (TPUs)
     main()
 
-CUDA_VISIBLE_DEVICES=0
+CUDA_VISIBLE_DEVICES=1
 
 if __name__ == "__main__":
     if len(sys.argv) < 2 or not sys.argv[1].endswith(".sh"):
         sys.argv.extend([
             "--do_train",
             "--dataset", "comparison_gpt4_zh",
-            "--dataset_dir", "../data",
+            "--dataset_dir", "./data",
             "--finetuning_type", "lora",
             "--output_dir", "path_to_rm_checkpoint",
             "--overwrite_cache",
@@ -86,7 +86,7 @@ if __name__ == "__main__":
             "--gradient_accumulation_steps", "8",
             "--lr_scheduler_type", "cosine",
             "--logging_steps", "10",
-            "--save_steps", "50",
+            "--save_steps", "100",
             "--learning_rate", "1e-5",
             "--num_train_epochs", "1.0",
             "--plot_loss",

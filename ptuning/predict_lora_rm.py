@@ -6,10 +6,10 @@ from peft import PeftModel
 # 加载预训练模型和分词器
 model_name = "../../chatglm-6b/"
 tokenizer = AutoTokenizer.from_pretrained(model_name, trust_remote_code=True)
-model = AutoModel.from_pretrained(model_name, trust_remote_code=True, device_map='auto')
+model = AutoModel.from_pretrained(model_name, load_in_8bit=True, trust_remote_code=True, device_map='auto')
 
 # # 读取lora模型参数
-model_path = "./path_to_rm_checkpoint/checkpoint-5"
+model_path = "./path_to_rm_checkpoint/checkpoint-300"
 model = PeftModel.from_pretrained(model, model_path, torch_dtype=torch.long)
 model.eval()
 
