@@ -411,9 +411,9 @@ def preprocess_data(
             target_ids = tokenizer.encode(text=answer, add_special_tokens=False)
 
             if len(source_ids) > data_args.max_source_length - 2: # gmask and bos tokens
-                source_ids = source_ids[:data_args.max_source_length - 2]
+                source_ids = source_ids[data_args.max_source_length - 2:]
             if len(target_ids) > data_args.max_target_length - 1: # eos token
-                target_ids = target_ids[:data_args.max_target_length - 1]
+                target_ids = target_ids[data_args.max_target_length - 1:]
 
             input_ids = tokenizer.build_inputs_with_special_tokens(source_ids, target_ids)
 
@@ -432,9 +432,9 @@ def preprocess_data(
             target_ids = tokenizer.encode(text=answer, add_special_tokens=False)
 
             if len(source_ids) > data_args.max_source_length - 2: # gmask and bos tokens
-                source_ids = source_ids[:data_args.max_source_length - 2]
+                source_ids = source_ids[data_args.max_source_length - 2:]
             if len(target_ids) > data_args.max_target_length - 2: # gmask and bos tokens
-                target_ids = target_ids[:data_args.max_target_length - 2]
+                target_ids = target_ids[data_args.max_target_length - 2:]
 
             input_ids = tokenizer.build_inputs_with_special_tokens(source_ids)
             labels = tokenizer.build_inputs_with_special_tokens(target_ids)
@@ -445,25 +445,27 @@ def preprocess_data(
 
     def preprocess_pairwise_dataset(examples):
         # build input pairs with format `X [gMASK] [BOS] Y1 [EOS]` and `X [gMASK] [BOS] Y2 [EOS]`
-        model_inputs = {"accept_ids": [], "reject_ids": []}
-        for prompt, answer in format_example(examples):
-            source_ids = tokenizer.encode(text=prompt, add_special_tokens=False)
-            accept_ids = tokenizer.encode(text=answer[0], add_special_tokens=False)
-            reject_ids = tokenizer.encode(text=answer[1], add_special_tokens=False)
+        model_inputs = {"accept_ids": [], "reject_ids": []}  # 创建一个字典，用于存储模型输入
+        for prompt, answer in format_example(examples):  # 遍历数据集中的每个样本
+            source_ids = tokenizer.encode(text=prompt, add_special_tokens=False)  # 将prompt编码为token ID
+            accept_ids = tokenizer.encode(text=answer[0], add_special_tokens=False)  # 将answer[0]编码为token ID
+            reject_ids = tokenizer.encode(text=answer[1], add_special_tokens=False)  # 将answer[1]编码为token ID
 
-            if len(source_ids) > data_args.max_source_length - 2: # gmask and bos tokens
-                source_ids = source_ids[:data_args.max_source_length - 2]
-            if len(accept_ids) > data_args.max_target_length - 1: # eos token
-                accept_ids = accept_ids[:data_args.max_target_length - 1]
-            if len(reject_ids) > data_args.max_target_length - 1: # eos token
-                reject_ids = reject_ids[:data_args.max_target_length - 1]
+            if len(source_ids) > data_args.max_source_length - 2:  # 如果source_ids的长度超过了最大长度减去2（gmask和bos tokens）
+                source_ids = source_ids[data_args.max_source_length - 2:]  # 则截断source_ids
+            if len(accept_ids) > data_args.max_target_length - 1:  # 如果accept_ids的长度超过了最大长度减去1（eos token）
+                accept_ids = accept_ids[data_args.max_target_length - 1:]  # 则截断accept_ids
+            if len(reject_ids) > data_args.max_target_length - 1:  # 如果reject_ids的长度超过了最大长度减去1（eos token）
+                reject_ids = reject_ids[data_args.max_target_length - 1:]  # 则截断reject_ids
 
-            accept_ids = tokenizer.build_inputs_with_special_tokens(source_ids[:], accept_ids) # avoid copying error
-            reject_ids = tokenizer.build_inputs_with_special_tokens(source_ids[:], reject_ids)
+            accept_ids = tokenizer.build_inputs_with_special_tokens(source_ids[:],
+                                                                    accept_ids)  # 将accept_ids添加特殊token，形成模型输入
+            reject_ids = tokenizer.build_inputs_with_special_tokens(source_ids[:],
+                                                                    reject_ids)  # 将reject_ids添加特殊token，形成模型输入
 
-            model_inputs["accept_ids"].append(accept_ids)
-            model_inputs["reject_ids"].append(reject_ids)
-        return model_inputs
+            model_inputs["accept_ids"].append(accept_ids)  # 将accept_ids添加到模型输入中
+            model_inputs["reject_ids"].append(reject_ids)  # 将reject_ids添加到模型输入中
+        return model_inputs  # 返回模型输入
 
     def print_sft_dataset_example(example):
         print("input_ids:\n{}".format(example["input_ids"]))
