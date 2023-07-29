@@ -415,6 +415,7 @@ def preprocess_data(
             if len(target_ids) > data_args.max_target_length - 1: # eos token
                 target_ids = target_ids[data_args.max_target_length - 1:]
 
+            # input_ids = tokenizer.build_inputs_with_special_tokens(source_ids)
             input_ids = tokenizer.build_inputs_with_special_tokens(source_ids, target_ids)
 
             context_length = input_ids.index(tokenizer.bos_token_id)

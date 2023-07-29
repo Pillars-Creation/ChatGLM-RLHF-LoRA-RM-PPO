@@ -242,6 +242,7 @@ class PPOTrainerForChatGLM(PPOTrainer, PeftTrainer):
         all_values = []
 
         for i in range(int(bs / fbs)):
+            torch.cuda.empty_cache()
             input_kwargs = {k: v[i * fbs : (i + 1) * fbs] for k, v in model_inputs.items()}
             input_ids: torch.Tensor = input_kwargs["input_ids"] # left-padded sequences
             if self.is_distributed: # re-generate them to adapt padded inputs

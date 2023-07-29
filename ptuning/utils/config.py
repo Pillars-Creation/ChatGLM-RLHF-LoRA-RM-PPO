@@ -4,7 +4,7 @@ from typing import List, Literal, Optional
 from dataclasses import asdict, dataclass, field
 
 
-CHATGLM_REPO_NAME = "../../chatglm-6b"
+CHATGLM_REPO_NAME = "../../chatglm-6b-int4"
 CHATGLM_VERSION = "a8ede826cf1b62bd3c78bdfb3625c7c5d2048fbd"
 
 

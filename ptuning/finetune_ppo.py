@@ -17,7 +17,6 @@ from utils import (
 )
 import sys
 
-
 def main():
 
     # prepare pretrained model and dataset
@@ -94,6 +93,6 @@ if __name__ == "__main__":
             "--num_train_epochs", "1.0",
             "--plot_loss",
             "--fp16",
-            "--max_target_length", "50",
+            "--max_target_length", "30"
         ])
     main()

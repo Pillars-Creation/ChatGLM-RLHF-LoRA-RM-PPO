@@ -21,6 +21,7 @@ def main():
     dataset = preprocess_data(dataset, tokenizer, data_args, training_args, stage="sft")
     data_collator = DataCollatorForChatGLM(tokenizer, model, data_args.ignore_pad_token_for_loss)
 
+
     # Override the decoding parameters of Seq2SeqTrainer
     training_args.generation_max_length = training_args.generation_max_length if \
                 training_args.generation_max_length is not None else data_args.max_target_length
@@ -102,7 +103,7 @@ if __name__ == "__main__":
             "--gradient_accumulation_steps", "8",
             "--lr_scheduler_type", "cosine",
             "--logging_steps", "10",
-            "--save_steps", "500",
+            "--save_steps", "200",
             "--learning_rate", "1e-5",
             "--num_train_epochs", "1.0",
             "--plot_loss",
