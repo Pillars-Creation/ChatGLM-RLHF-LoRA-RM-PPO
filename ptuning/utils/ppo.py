@@ -24,18 +24,18 @@ from .other import (
 
 logger = get_logger(__name__)
 
-
+#这个函数的作用是替换模型的头部，以便于在训练过程中计算奖励。
 def replace_model(model: AutoModelForCausalLMWithValueHead, target: Literal["default", "reward"]) -> None:
-    if target == "reward": # save original head temporarily
+    if target == "reward": # 如果目标是reward，则先保存原始头部权重和偏置
         valuehead_state_dict = model.v_head.state_dict()
 
         setattr(model, "origin_head_weight", valuehead_state_dict["summary.weight"])
         setattr(model, "origin_head_bias", valuehead_state_dict["summary.bias"])
 
-    model.pretrained_model.set_adapter(target) # set the LoRA adapter to be active
+    model.pretrained_model.set_adapter(target) # 设置LoRA适配器为活动状态
     model.v_head.load_state_dict({
-        "summary.weight": getattr(model, "{}_head_weight".format(target)),
-        "summary.bias": getattr(model, "{}_head_bias".format(target))
+        "summary.weight": getattr(model, "{}_head_weight".format(target)), # 加载指定头部权重
+        "summary.bias": getattr(model, "{}_head_bias".format(target)) # 加载指定头部偏置
     })
 
 
@@ -124,62 +124,64 @@ class PPOTrainerForChatGLM(PPOTrainer, PeftTrainer):
 
             for _ in range(self.config.gradient_accumulation_steps):
 
-                batch = next(dataiter)
-                steps_trained += 1
+                batch = next(dataiter)  # 从数据迭代器中获取一个batch的数据
+                steps_trained += 1  # 累加已训练的步数
 
-                unwrapped_model.gradient_checkpointing_disable()
-                unwrapped_model.config.use_cache = True
+                unwrapped_model.gradient_checkpointing_disable()  # 禁用梯度检查点
+                unwrapped_model.config.use_cache = True  # 启用缓存
 
                 # Get response from ChatGLM
-                query_tensors: torch.Tensor = batch["input_ids"]
-                response_tensors = self.generate(batch, length_sampler=output_length_sampler, return_prompt=False, **gen_kwargs)
+                query_tensors: torch.Tensor = batch["input_ids"]  # 从batch中获取查询的张量
+                response_tensors = self.generate(batch, length_sampler=output_length_sampler, return_prompt=False,
+                                                 **gen_kwargs)  # 使用ChatGLM模型生成回复的张量
 
-                queries: List[torch.Tensor] = []
-                responses: List[torch.Tensor] = []
-                for i in range(len(query_tensors)):
-                    query_length = (query_tensors[i] != self.tokenizer.pad_token_id).nonzero()[0]
-                    response_length = (response_tensors[i] != self.tokenizer.pad_token_id).nonzero()[-1] + 1
-                    queries.append(query_tensors[i, query_length:]) # remove padding from left
-                    if response_length < 2: # make response have at least 2 tokens
-                        responses.append(response_tensors.new_empty(2).fill_(self.tokenizer.eos_token_id))
+                queries: List[torch.Tensor] = []  # 查询列表
+                responses: List[torch.Tensor] = []  # 回复列表
+                for i in range(len(query_tensors)):  # 遍历每个查询和回复的张量
+                    query_length = (query_tensors[i] != self.tokenizer.pad_token_id).nonzero()[0]  # 计算查询的长度
+                    response_length = (response_tensors[i] != self.tokenizer.pad_token_id).nonzero()[-1] + 1  # 计算回复的长度
+                    queries.append(query_tensors[i, query_length:])  # 将查询添加到查询列表中，去掉左侧的填充
+                    if response_length < 2:  # 如果回复的长度小于2
+                        responses.append(
+                            response_tensors.new_empty(2).fill_(self.tokenizer.eos_token_id))  # 将回复填充为EOS标记，确保回复至少有两个标记
                     else:
-                        responses.append(response_tensors[i, :response_length]) # remove padding from right
+                        responses.append(response_tensors[i, :response_length])  # 将回复添加到回复列表中，去掉右侧的填充
 
                 # Compute rewards
-                replace_model(unwrapped_model, target="reward")
-                _, _, values = self.model(**self.prepare_model_inputs(queries, responses))
-                rewards = [reward for reward in values[-1]]
-                replace_model(unwrapped_model, target="default") # make sure the model is default at the end
+                replace_model(unwrapped_model, target="reward")  # 将模型切换到奖励模式
+                _, _, values = self.model(**self.prepare_model_inputs(queries, responses))  # 使用查询和回复的张量计算奖励值
+                rewards = [reward for reward in values[-1]]  # 将奖励值存储在rewards列表中
+                replace_model(unwrapped_model, target="default")  # 确保模型在最后是默认模式
 
                 # Run PPO step
-                unwrapped_model.gradient_checkpointing_enable()
-                unwrapped_model.config.use_cache = False
+                unwrapped_model.gradient_checkpointing_enable()  # 启用梯度检查点
+                unwrapped_model.config.use_cache = False  # 禁用缓存
 
-                stats = self.step(queries, responses, rewards)
+                stats = self.step(queries, responses, rewards)  # 使用PPO算法更新模型参数，并记录损失和奖励的平均值
 
-                loss_meter.update(stats["ppo/loss/total"], n=len(rewards))
-                reward_meter.update(torch.stack(rewards).mean().item(), n=len(rewards))
+                loss_meter.update(stats["ppo/loss/total"], n=len(rewards))  # 记录损失的平均值
+                reward_meter.update(torch.stack(rewards).mean().item(), n=len(rewards))  # 记录奖励的平均值
 
-                if steps_trained == len_dataloader:
-                    dataiter = iter(self.dataloader)
-                    steps_trained = 0
+                if steps_trained == len_dataloader:  # 如果已经训练了一个epoch
+                    dataiter = iter(self.dataloader)  # 重置数据迭代器
+                    steps_trained = 0  # 重置已训练的步数
 
-            if self.is_world_process_zero() and (step+1) % self.args.logging_steps == 0:
+            if self.is_world_process_zero() and (step + 1) % self.args.logging_steps == 0:  # 如果是主进程且到达了logging_steps的倍数
                 logs = {
-                    "loss": round(loss_meter.avg, 4),
-                    "reward": round(reward_meter.avg, 4),
-                    "learning_rate": stats["ppo/learning_rate"],
-                    "epoch": round(step / num_steps_per_epoch, 2)
+                    "loss": round(loss_meter.avg, 4),  # 记录损失的平均值
+                    "reward": round(reward_meter.avg, 4),  # 记录奖励的平均值
+                    "learning_rate": stats["ppo/learning_rate"],  # 记录学习率
+                    "epoch": round(step / num_steps_per_epoch, 2)  # 记录当前epoch
                 }
-                print(logs)
-                logs["step"] = step
-                self.state.log_history.append(logs)
-                self.log_callback.on_log(self.args, self.state, None)
-                loss_meter.reset()
-                reward_meter.reset()
+                print(logs)  # 打印日志
+                logs["step"] = step  # 记录当前步数
+                self.state.log_history.append(logs)  # 将日志添加到历史记录中
+                self.log_callback.on_log(self.args, self.state, None)  # 调用回调函数记录日志
+                loss_meter.reset()  # 重置损失的平均值
+                reward_meter.reset()  # 重置奖励的平均值
 
-            if (step+1) % self.args.save_steps == 0: # save checkpoint
-                self.save_model(os.path.join(self.args.output_dir, f"checkpoint-{step+1}"))
+            if (step + 1) % self.args.save_steps == 0:  # 如果到达了save_steps的倍数
+                self.save_model(os.path.join(self.args.output_dir, f"checkpoint-{step + 1}"))  # 保存模型的checkpoint
 
     @torch.no_grad()
     def generate(
@@ -214,12 +216,14 @@ class PPOTrainerForChatGLM(PPOTrainer, PeftTrainer):
             return response[:, inputs["input_ids"].size(1):]
         return response
 
-    def prepare_model_inputs(self, queries: List[torch.Tensor], responses: List[torch.Tensor]) -> Dict[str, torch.Tensor]:
-        input_ids = [torch.cat([q, r]) for q, r in zip(queries, responses)]
-        input_data = self.data_collator([{"input_ids": ids} for ids in input_ids])
-        input_data = {k: v.to(self.current_device) for k, v in input_data.items() if v is not None}
-        input_data.pop("labels", None)  # we don't want to compute LM losses
-        return input_data
+    #这个函数的作用是将查询和回复的张量拼接起来，并使用数据处理器处理拼接后的张量。处理后的张量被移动到当前设备，并返回。在处理过程中，标签被移除，避免计算语言模型的损失。
+    def prepare_model_inputs(self, queries: List[torch.Tensor], responses: List[torch.Tensor]) -> Dict[
+        str, torch.Tensor]:
+        input_ids = [torch.cat([q, r]) for q, r in zip(queries, responses)]  # 将查询和回复的张量拼接起来
+        input_data = self.data_collator([{"input_ids": ids} for ids in input_ids])  # 使用数据处理器处理拼接后的张量
+        input_data = {k: v.to(self.current_device) for k, v in input_data.items() if v is not None}  # 将张量移动到当前设备
+        input_data.pop("labels", None)  # we don't want to compute LM losses # 移除标签，避免计算语言模型的损失
+        return input_data  # 返回处理后的张量
 
     @PPODecorators.empty_cuda_cache()
     def batched_forward_pass(
