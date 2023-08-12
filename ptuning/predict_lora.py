@@ -21,6 +21,6 @@ out = model.generate(
         max_length=150,
         temperature=0
     )
-answer = tokenizer.decode(out[0])
+answer =  tokenizer.decode(out[0]).split('summary:')[1]
 print('新闻：', answer)
 

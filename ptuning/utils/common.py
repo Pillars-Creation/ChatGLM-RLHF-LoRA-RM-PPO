@@ -418,7 +418,10 @@ def preprocess_data(
             # input_ids = tokenizer.build_inputs_with_special_tokens(source_ids)
             input_ids = tokenizer.build_inputs_with_special_tokens(source_ids, target_ids)
 
-            context_length = input_ids.index(tokenizer.bos_token_id)
+            #[IGNORE_INDEX]表示一个特殊的标记，用于表示需要被忽略的标记。通过将[IGNORE_INDEX] 乘以
+            #context_length，我们创建了一个与输入序列长度相同的列表，其中的每个元素都是[IGNORE_INDEX]。然后，我们将
+            #input_ids[context_length:]添加到这个列表中，以保留输入序列中从context_length开始的标记
+            context_length = source_ids.index(tokenizer.bos_token_id)
             labels = [IGNORE_INDEX] * context_length + input_ids[context_length:]
 
             model_inputs["input_ids"].append(input_ids)
