@@ -34,9 +34,9 @@ text = "'江苏南京：暴雨致水淹车数量激增 (新闻)', '真漂亮！�
        "人间仙境 (新闻)', '完全没听过！选手被9号门难倒，求助女友也没用，小尼给提示 (综艺)', '《雪中悍刀行》曹长卿：天象境独占八斗气运，与王仙芝打成平手 (电视剧)', " \
        "'周六问效：连夜抢修施工 居民再无困扰 (新闻)', '女子涉嫌诈骗被网上通缉 乘坐火车四处躲藏 被乘警识破 (新闻)', '老人在烈日下收割水稻，收割机师傅：看到他们就想起了家里的老父亲，" \
        "能帮就帮一把！ (生活)', '1分变0分.. 下半场临近结束前，丹麦利用角球绝杀中国女足 (体育)', '为何一到“七下八上”雨水就变多？ (新闻)"
-quary = """从上面文章中挑选出和"军事"相关的新闻"""
+quary = """从上面文章中挑选出和"电视剧"相关的新闻"""
 input = text + quary + "summary："
-input_ids = tokenizer.encode(input, return_tensors='pt').long()
+input_ids = tokenizer.encode(input, return_tensors='pt').long().to('cuda')
 out = model.generate(
         input_ids=input_ids,
         max_length=1500,

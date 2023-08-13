@@ -59,6 +59,7 @@ def main():
         trainer.save_model()  # 保存模型
         if trainer.is_world_process_zero() and model_args.plot_loss:  # 如果是全局进程中的第一个进程，并且设置了plot_loss为True，则绘制损失图
             plot_loss(training_args, keys=["loss", "eval_loss"])
+        print('train success')
 
     # Evaluation
     if training_args.do_eval:  # 如果设置了do_eval为True，则进行评估
