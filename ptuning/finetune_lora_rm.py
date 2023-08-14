@@ -78,6 +78,7 @@ if __name__ == "__main__":
     if len(sys.argv) < 2 or not sys.argv[1].endswith(".sh"):
         sys.argv.extend([
             "--do_train",
+            "--do_eval",
             "--dataset", "comparison_data.json",
             "--dataset_dir", "./data",
             "--finetuning_type", "lora",

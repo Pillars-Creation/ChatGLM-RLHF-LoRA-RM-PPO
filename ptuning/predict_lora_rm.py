@@ -36,8 +36,9 @@ def is_similar(ans, article_list, similarity_threshold):
     return False
 
 # 批处理输入数据
-batch_size = 15
 input_batch = []
+range_num =100
+positive_num = 0
 for i in range(100):
        random_articles = df.sample(n=31)
        random_article = random_articles.iloc[0]
@@ -51,9 +52,20 @@ for i in range(100):
            temperature=0
        )
        out = tokenizer.batch_decode(out, skip_special_tokens=True)
-       answer = out[0].split('summary')[1].strip()
+       answer = out[0].split('summary:')[1].strip()
 
        print('新闻：', input_str)
-       print('answer', answer)
+       print('answer :', answer)
+       for ans in answer.split('\n'):
+           similarity_threshold = 0.9  # 相似度阈值
+           # 判断是否在input中且分类是否一致
+           if is_similar(ans, article_list, similarity_threshold):
+               positive_num = positive_num +1
+               break
+       print('i', 'accuracy:', positive_num / (i+1))
+
+
+
+
 
 

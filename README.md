@@ -73,6 +73,20 @@ python finetune_lora_sft.py
 ```
 python finetune_lora_rm.py
 ```
+##### PPO
+
+
+```
+注 
+1。ppo 需要trl 版本0.4.0 可以使用命令安装 pip install trl==0.4.0
+2。ppo代码需要加载两个模型，sft 和 rm， 所以显存需要大一些大不然会报显存不够的错误，本例在A100的机器上跑通
+
+单卡命令
+    python finetune_ppo.py
+多gpu卡命令
+    deepspeed finetune_ppo.py
+
+```
 
 ### 预测
 
