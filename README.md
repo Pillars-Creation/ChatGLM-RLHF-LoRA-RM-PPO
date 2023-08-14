@@ -78,7 +78,7 @@ python finetune_lora_rm.py
 
 ```
 注 
-1。ppo 需要trl 版本0.4.0 可以使用命令安装 pip install trl==0.4.0
+1。ppo 基于trl 版本0.4.0实现 版本不同并不兼容 可以使用命令安装 pip install trl==0.4.0
 2。ppo代码需要加载两个模型，sft 和 rm， 所以显存需要大一些大不然会报显存不够的错误，本例在A100的机器上跑通
 
 单卡命令
