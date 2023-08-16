@@ -105,6 +105,12 @@ CUDA_VISIBLE_DEVICES=0 python predict_lora_sft.py
 ```
 CUDA_VISIBLE_DEVICES=0 python predict_lora_rm.py
 ```
+##### PP0
+
+
+```
+CUDA_VISIBLE_DEVICES=0 python predict_ppo.py
+```
 
 ## 模型部署
 首先载入Tokenizer：
