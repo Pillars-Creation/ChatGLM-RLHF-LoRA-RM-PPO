@@ -65,13 +65,13 @@ bash ds_train_finetune.sh
 
 
 ```
-python finetune_lora_sft.py
+CUDA_VISIBLE_DEVICES=0 python finetune_lora_sft.py
 ```
 ##### RM
 
 
 ```
-python finetune_lora_rm.py
+CUDA_VISIBLE_DEVICES=0 python finetune_lora_rm.py 
 ```
 ##### PPO
 
@@ -95,13 +95,13 @@ python finetune_lora_rm.py
 
 
 ```
-python predict_lora_sft.py
+CUDA_VISIBLE_DEVICES=0 python predict_lora_sft.py
 ```
 ##### RM
 
 
 ```
-python predict_lora_rm.py
+CUDA_VISIBLE_DEVICES=0 python predict_lora_rm.py
 ```
 
 ## 模型部署

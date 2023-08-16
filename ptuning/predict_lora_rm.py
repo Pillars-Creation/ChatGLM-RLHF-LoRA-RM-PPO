@@ -40,22 +40,24 @@ input_batch = []
 range_num =100
 positive_num = 0
 for i in range(100):
+        #随机选择30篇作为prompt
        random_articles = df.sample(n=31)
        random_article = random_articles.iloc[0]
        cat = random_article['category']
        article_list = [title + ' (' + cat + ')' for title, cat in zip(random_articles['title'], random_articles['category'])]
        input_str = construct_input(article_list, cat)
        input_ids = tokenizer.encode(input_str, return_tensors='pt').to('cuda')
-       out = model.generate(
+       out = peft_model.generate(
            input_ids=input_ids,
            max_length=1500,
            temperature=0
        )
        out = tokenizer.batch_decode(out, skip_special_tokens=True)
-       answer = out[0].split('summary:')[1].strip()
+       answer = out[0].split('summary:', 1)[1].strip()
 
-       print('新闻：', input_str)
-       print('answer :', answer)
+       # print('新闻：', input_str)
+       # print('answer :', answer)
+        #判断命中条数
        for ans in answer.split('\n'):
            similarity_threshold = 0.9  # 相似度阈值
            # 判断是否在input中且分类是否一致

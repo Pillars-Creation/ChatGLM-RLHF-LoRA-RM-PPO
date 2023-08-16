@@ -14,10 +14,6 @@ model_name = "../../chatglm-6b/"
 tokenizer = AutoTokenizer.from_pretrained(model_name, trust_remote_code=True)
 model = AutoModel.from_pretrained(model_name, load_in_8bit=True, trust_remote_code=True, device_map='auto')
 
-# 读取lora sft模型参数
-model_path = "./path_to_sft_checkpoint"
-peft_model = PeftModel.from_pretrained(model, model_path, torch_dtype=torch.long)
-peft_model.eval()
 results_rm = []
 
 # 构造instruction和input
@@ -46,7 +42,7 @@ for i in range(100):
        article_list = [title + ' (' + cat + ')' for title, cat in zip(random_articles['title'], random_articles['category'])]
        input_str = construct_input(article_list, cat)
        input_ids = tokenizer.encode(input_str, return_tensors='pt').to('cuda')
-       out = peft_model.generate(
+       out = model.generate(
            input_ids=input_ids,
            max_length=1500,
            temperature=0
@@ -64,7 +60,7 @@ for i in range(100):
            if is_similar(ans, article_list, similarity_threshold):
                positive_num = positive_num +1
                break
-       print(i, 'sft accuracy:', positive_num / (i+1))
+       print(i, 'glm accuracy:', positive_num / (i+1))
 
 
 
